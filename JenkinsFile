@@ -1,7 +1,4 @@
 pipeline{
-    agent {
-        label 'ansible'
-    }
     tools {
       maven 'MVN_HOME'
     }
