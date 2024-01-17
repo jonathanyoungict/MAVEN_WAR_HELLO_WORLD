@@ -1,37 +1,54 @@
 pipeline{
-    agent any
+    agent {
+        label 'ansible'
+    }
     tools {
       maven 'MVN_HOME'
+    }
+	
+	
+    environment {
+        DOCKER_HUB_CREDENTIALS = credentials('docker-hub-creds')
     }
 
     stages{
        stage('Maven Build') {
          steps {
-           echo 'Here you should trigger a maven build of your application using either bat(windows) or sh(linux)'
+			// print system information
+		   sh "uname -a";
+		   
+		   // mvn build
+		   echo 'start: mvn clean package'
+           sh "mvn clean package"
+		   
          }
+		 
+		 post {
+		   always {
+				echo "end: mvn clean package"
+		   }
+		   success {
+				junit '**/target/surefire-reports/TEST-*.xml'
+		   }
+		 }
        }
        
       stage('Docker Build'){
             steps{
-                echo 'In this step you should build your docker image using the docker build command'
-                echo 'So you need to build an image from the WAR that you generated previously'
-                echo 'Remember that starting point of your image should be tomcat in order to serve the application on the web'
+				sh "sudo docker build -t jonathanefreilearning/tomcat_example .";
             }
         }
         
       stage('DockerHub Push'){
             steps{
-                echo 'You should first login to your github account using the withCredentials synatx'
-                echo 'And for that you need to create the appropriate credentials to access the github account in Jenkins'
-                echo 'Then you need to push this image to the public registry dockerhub into your account'
-                echo 'Use the docker push command'
+				sh "sudo docker login -u ${DOCKER_HUB_CREDENTIALS_USR} -p ${DOCKER_HUB_CREDENTIALS_PSW}"
+                sh "sudo docker push jonathanefreilearning/tomcat_example:latest"
             }
         }
   
       stage('Docker Deploy'){
             steps{
-                echo 'You should use the ansiblePlaybook syntax in order to call your playbook'
-                echo 'But before that you need to create an agent in order to execute the playbook on the Ansible controle node machine'
+				sh "ansible-playbook client.yaml"
             }
         }        
     }
