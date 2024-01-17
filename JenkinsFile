@@ -34,14 +34,15 @@ pipeline{
        
       stage('Docker Build'){
             steps{
-				sh "sudo docker build -t jonathanefreilearning/tomcat_example .";
+				sh "sudo docker build -t jonathanyoungefrei/tomcat_example .";
             }
         }
         
       stage('DockerHub Push'){
             steps{
 				sh "sudo docker login -u ${DOCKER_HUB_CREDENTIALS_USR} -p ${DOCKER_HUB_CREDENTIALS_PSW}"
-                sh "sudo docker push jonathanefreilearning/tomcat_example:latest"
+                sh "sudo docker push jonathanyoungefrei/tomcat_example:latest"
+
             }
         }
   
