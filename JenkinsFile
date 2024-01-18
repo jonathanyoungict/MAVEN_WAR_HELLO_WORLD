@@ -34,7 +34,8 @@ pipeline{
        
       stage('Docker Build'){
             steps{
-				sh "sudo docker build -t jonathanyoungefrei/tomcat_example .";
+				sh "docker build -t jonathanyoungefrei/tomcat_example .";
+				// sh "sudo docker build -t jonathanyoungefrei/tomcat_example .";
             }
         }
         
