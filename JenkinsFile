@@ -7,7 +7,7 @@ pipeline{
 	
 	
     environment {
-        DOCKER_HUB_CREDENTIALS = credentials('dckr_pat_JGv13MSwXbSrvIr_kd52HH1nNAk')
+        DOCKER_HUB_CREDENTIALS = credentials('docker-hub-pat')
     }
 
     stages{
