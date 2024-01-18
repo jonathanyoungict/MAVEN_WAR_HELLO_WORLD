@@ -32,23 +32,21 @@ pipeline{
 		 }
        }
        
-        stage('Building our image') {
-            steps {
-                script {
-                    dockerImage = docker.build("jonathanefreilearning/tomcat_example:${BUILD_NUMBER}")
-                }
+        stage('Docker Build'){
+            steps{
+		sh "docker build -t jonathanefreilearning/tomcat_example .";
+		// sh "sudo docker build -t jonathanefreilearning/tomcat_example .";
             }
         }
-
-        stage('Deploy our image') {
-            steps {
-                script {
-                    docker.withRegistry('', 'docker-hub-creds') {
-                        dockerImage.push()
-                    }
-                }
-            }
-        }
+	stage('DockerHub Push') {
+	    steps {
+	        script {
+	            docker.withRegistry('', 'docker-hub-creds') {
+	                sh "docker push jonathanefreilearning/tomcat_example:latest"
+	            }
+	        }
+	    }
+	}
 
       stage('Docker Deploy'){
             steps{
