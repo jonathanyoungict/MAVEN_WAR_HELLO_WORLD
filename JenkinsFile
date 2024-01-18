@@ -32,7 +32,6 @@ pipeline{
 		 }
        }
        
-      stages {
         stage('Building our image') {
             steps {
                 script {
