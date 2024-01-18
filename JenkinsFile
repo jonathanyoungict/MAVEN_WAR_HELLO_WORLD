@@ -41,10 +41,12 @@ pipeline{
       //
   
       stage('Docker Deploy'){
-            steps{
-				sh "ansible-playbook deploy-docker.yml"
-            }
-        }        
+	    steps{
+	        script {
+	            sh "export ANSIBLE_STDIN_CALLBACK=yaml && ansible-playbook deploy-docker.yml"
+	        }
+	    }
+	}        
     }
     
 }
