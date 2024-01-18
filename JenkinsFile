@@ -7,7 +7,7 @@ pipeline{
 	
 	
     environment {
-        DOCKER_HUB_CREDENTIALS = credentials('docker-hub-pat')
+        DOCKER_HUB_CREDENTIALS = credentials('docker-hub-creds')
     }
 
     stages{
@@ -38,15 +38,15 @@ pipeline{
 				// sh "sudo docker build -t jonathanyoungefreilearning/tomcat_example .";
             }
         }
-      stage('DockerHub Push') {
-            steps {
-                withCredentials([string(credentialsId: 'docker-hub-pat', variable: 'DOCKER_HUB_ACCESS_TOKEN')]) {
-                    sh "echo 'Logging in to Docker Hub'"
-                    sh "docker login -u jonathanyoungefreilearning --password-stdin <<< \$DOCKER_HUB_ACCESS_TOKEN"
-                    sh "docker push jonathanyoungefreilearning/tomcat_example:latest"
-                }
+      stage('DockerHub Push'){
+        steps{
+            withCredentials([usernamePassword(credentialsId: 'docker-hub-creds', usernameVariable: 'DOCKER_HUB_CREDENTIALS_USR', passwordVariable: 'DOCKER_HUB_CREDENTIALS_PSW')]) {
+                sh "echo 'Logging in to Docker Hub'"
+                sh "echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin"
+                sh "docker push jonathanyoungefreilearning/tomcat_example:latest"
             }
         }
+    }
   
       stage('Docker Deploy'){
             steps{
