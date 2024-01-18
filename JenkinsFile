@@ -43,10 +43,11 @@ pipeline{
       stage('Docker Deploy'){
 	    steps{
 	        script {
-	            sh "export ANSIBLE_STDIN_CALLBACK=yaml && ansible-playbook deploy-docker.yml"
+	            sh "export ANSIBLE_STDIN_CALLBACK=yaml ANSIBLE_HOST_KEY_CHECKING=False && ansible-playbook deploy-docker.yml"
 	        }
 	    }
-	}        
+	}
+        
     }
     
 }
