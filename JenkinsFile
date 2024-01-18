@@ -34,18 +34,16 @@ pipeline{
        
       stage('Docker Build'){
             steps{
-				sh "docker build -t jonathanyoungefrei/tomcat_example .";
-				// sh "sudo docker build -t jonathanyoungefrei/tomcat_example .";
+				sh "docker build -t jonathanyoungefreilearning/tomcat_example .";
+				// sh "sudo docker build -t jonathanyoungefreilearning/tomcat_example .";
             }
         }
       stage('DockerHub Push'){
         steps{
             withCredentials([usernamePassword(credentialsId: 'docker-hub-creds', usernameVariable: 'DOCKER_HUB_CREDENTIALS_USR', passwordVariable: 'DOCKER_HUB_CREDENTIALS_PSW')]) {
                 sh "echo 'Logging in to Docker Hub'"
-                withCredentials([usernamePassword(credentialsId: 'docker-hub-creds', usernameVariable: 'DOCKER_HUB_CREDENTIALS_USR', passwordVariable: 'DOCKER_HUB_CREDENTIALS_PSW')]) {
-                    sh "echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin"
-                    sh "docker push jonathanyoungefrei/tomcat_example:latest"
-                }
+                sh "echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin"
+                sh "docker push jonathanyoungefreilearning/tomcat_example:latest"
             }
         }
     }
