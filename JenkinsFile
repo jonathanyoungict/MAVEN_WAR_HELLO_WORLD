@@ -42,11 +42,12 @@ pipeline{
 	    steps{
 	        withCredentials([usernamePassword(credentialsId: 'docker-hub-creds', usernameVariable: 'DOCKER_HUB_CREDENTIALS_USR', passwordVariable: 'DOCKER_HUB_CREDENTIALS_PSW')]) {
 	            sh "echo 'Logging in to Docker Hub'"
-	            sh "echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin"
+	            sh "echo \$DOCKER_HUB_CREDENTIALS_PSW | docker login -u \$DOCKER_HUB_CREDENTIALS_USR --password-stdin"
 	            sh "docker push jonathanefreilearning/tomcat_example:latest"
 	        }
 	    }
 	}
+
 
   
       stage('Docker Deploy'){
