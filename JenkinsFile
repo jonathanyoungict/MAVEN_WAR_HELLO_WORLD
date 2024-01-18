@@ -32,24 +32,25 @@ pipeline{
 		 }
        }
        
-      stage('Docker Build'){
-            steps{
-				sh "docker build -t jonathanefreilearning/tomcat_example .";
-				// sh "sudo docker build -t jonathanefreilearning/tomcat_example .";
+      stages {
+        stage('Building our image') {
+            steps {
+                script {
+                    dockerImage = docker.build("jonathanefreilearning/tomcat_example:${BUILD_NUMBER}")
+                }
             }
         }
-	stage('DockerHub Push'){
-	    steps{
-	        withCredentials([usernamePassword(credentialsId: 'docker-hub-creds', usernameVariable: 'DOCKER_HUB_CREDENTIALS_USR', passwordVariable: 'DOCKER_HUB_CREDENTIALS_PSW')]) {
-	            sh "echo 'Logging in to Docker Hub'"
-	            sh "echo \$DOCKER_HUB_CREDENTIALS_PSW | docker login -u \$DOCKER_HUB_CREDENTIALS_USR --password-stdin"
-	            sh "docker push jonathanefreilearning/tomcat_example:latest"
-	        }
-	    }
-	}
 
+        stage('Deploy our image') {
+            steps {
+                script {
+                    docker.withRegistry('', 'docker-hub-creds') {
+                        dockerImage.push()
+                    }
+                }
+            }
+        }
 
-  
       stage('Docker Deploy'){
             steps{
 				sh "ansible-playbook deploy-docker.yml"
