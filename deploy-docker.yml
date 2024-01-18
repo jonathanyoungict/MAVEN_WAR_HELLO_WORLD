@@ -1,17 +1,21 @@
 ---
 - hosts: linuxclient1
-  become: True
+  become: true
   become_user: root
   tasks:
     - name: Install yum-utils (use the yum module)
       yum:
         name: yum-utils
         state: present
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
 
     - name: Download Docker repository file using the get_url
       get_url:
         url: https://download.docker.com/linux/centos/docker-ce.repo
         dest: /etc/yum.repos.d/docker-ce.repo
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
 
     - name: Install Docker packages (engine) using yum module
       yum:
@@ -20,9 +24,14 @@
           - docker-ce-cli
           - containerd.io
         state: present
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
 
     - name: Start Docker service using the systemd module
       systemd:
         name: docker
         state: started
         enabled: yes
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
+
