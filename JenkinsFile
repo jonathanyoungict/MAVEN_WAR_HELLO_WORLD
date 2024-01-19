@@ -41,13 +41,16 @@ pipeline{
 	stage('DockerHub Push') {
 	    steps {
 	        script {
-			sh "ansible -m ping linuxclient1"
-	            docker.withRegistry('', 'docker-hub-creds') {
-	                sh "docker push jonathanefreilearning/tomcat_example:latest"
-	            }
-	        }
+			withCredentials([sshUserPrivateKey(credentialsId: 'your-ssh-credentials-id', keyFileVariable: 'SSH_KEY')]) {
+                	// Run Ansible ping command using the SSH key
+                	sh "ansible -m ping -u eastih -i '${ansible_host},' --private-key=${SSH_KEY} ${ansible_extra_args}"
+	            	//docker.withRegistry('', 'docker-hub-creds') {
+	                //sh "docker push jonathanefreilearning/tomcat_example:latest"
+		            }
+		        }
+		    }
+		}
 	    }
-	}
 
       stage('Docker Deploy'){
             steps{
