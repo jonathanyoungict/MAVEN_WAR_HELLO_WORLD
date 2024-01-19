@@ -1,61 +1,43 @@
 pipeline{
-	agent any
+    agent any
     tools {
       maven 'MVN_HOME'
-      jdk "JDK11"
     }
 	
-	
-    environment {
-        DOCKER_HUB_CREDENTIALS = credentials('docker-hub-creds')
-    }
-
-    stages{
-       stage('Maven Build') {
-         steps {
-			// print system information
-		   sh "uname -a";
-		   
-		   // mvn build
-		   echo 'start: mvn clean package'
-           sh "mvn clean package"
-		   
-         }
-		 
-		 post {
-		   always {
-				echo "end: mvn clean package"
-		   }
-		   success {
-				junit '**/target/surefire-reports/TEST-*.xml'
-		   }
-		 }
-       }
-       
-        stage('Docker Build'){
-            steps{
-		sh "docker build -t jonathanefreilearning/tomcat_example .";
-		// sh "sudo docker build -t jonathanefreilearning/tomcat_example .";
-            }
-        }
-	    stage('DockerHub Push'){
+	environment {
+        // Credential defined in Jenkins
+	        DOCKER_CREDENTIALS = credentials('docker-hub-pass')
+	    }
+		
+		stages{
+		    stage('Maven Build') {
+		        steps {
+		            echo 'Trigger a maven build'
+		            sh "mvn clean package"
+		        }
+		    }
+		       
+		    stage('Docker Build'){
 		        steps{
-		            echo 'Login to Docker-Hub with docker-hub-creds credentials'
-		            sh "docker login -u ${DOCKER_HUB_CREDENTIALS_USR} -p ${DOCKER_HUB_CREDENTIALS_PSW}"
+		            echo 'Build jonathanefreilearning/tomcat_example'
+		            sh "docker build -t jonathanefreilearning/tomcat_example . "
+		        }
+		    }
+		        
+		    stage('DockerHub Push'){
+		        steps{
+		            echo 'Login to Docker-Hub with docker-hub-pass credentials'
+		            sh "docker login -u ${DOCKER_CREDENTIALS_USR} -p ${DOCKER_CREDENTIALS_PSW}"
 		            echo 'Push Docker image to Docker Hub'
 		            sh "docker push jonathanefreilearning/tomcat_example:latest"
 		        }
 		    }
-
-      stage('Docker Deploy'){
-            steps{
-		script{
-			sh "ansible-playbook deploy-docker.yml"
-			}	
-	            }
-	        }        
-	    }
-	    
+		  
+		    stage('Docker Deploy'){
+		        steps{
+		            echo 'Deploy Docker'
+		            ansiblePlaybook credentialsId: 'ansible', inventory: 'dev.inv', playbook: 'deploy-docker.yml'     
+		    	}
+		}
 	}
-
-
+}
