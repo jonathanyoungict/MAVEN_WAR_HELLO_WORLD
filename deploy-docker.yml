@@ -1,37 +1,17 @@
 ---
-- hosts: linuxclient1
+- name: Install Docker on Linuxclient1
+  hosts: linuxclient1
   become: true
-  become_user: root
+
   tasks:
-    - name: Install yum-utils (use the yum module)
+    - name: Install Docker version 24 using yum
       yum:
-        name: yum-utils
+        name: docker-24:{{ item }}
         state: present
-      vars:
-        ansible_python_interpreter: /usr/bin/python3
-
-    - name: Download Docker repository file using the get_url
-      get_url:
-        url: https://download.docker.com/linux/centos/docker-ce.repo
-        dest: /etc/yum.repos.d/docker-ce.repo
-      vars:
-        ansible_python_interpreter: /usr/bin/python3
-
-    - name: Install Docker packages (engine) using yum module
-      yum:
-        name:
-          - docker-ce
-          - docker-ce-cli
-          - containerd.io
-        state: present
-      vars:
-        ansible_python_interpreter: /usr/bin/python3
-
-    - name: Start Docker service using the systemd module
-      systemd:
-        name: docker
-        state: started
-        enabled: yes
-      vars:
-        ansible_python_interpreter: /usr/bin/python3
-
+      loop:
+        - docker
+        - docker-client
+        - docker-common
+        - docker-rhel-push-plugin
+        - docker-scan-plugin
+        - docker-latest
