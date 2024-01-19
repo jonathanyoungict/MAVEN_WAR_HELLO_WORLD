@@ -47,8 +47,8 @@ pipeline{
 	            	//docker.withRegistry('', 'docker-hub-creds') {
 	                //sh "docker push jonathanefreilearning/tomcat_example:latest"
 		            
-		        }
-		    }
+		        //}
+		    //}
 		}
 	    }
 	}
