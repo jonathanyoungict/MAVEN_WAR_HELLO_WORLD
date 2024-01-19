@@ -51,7 +51,7 @@
         name: docker
 
 - name: Deploy Docker Container
-  hosts: 192.168.50.27
+  hosts: 192.168.0.37
   become: true
 
   tasks:
