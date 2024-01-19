@@ -51,6 +51,7 @@ pipeline{
 		    }
 		}
 	    }
+	}
 
       stage('Docker Deploy'){
             steps{
@@ -63,4 +64,4 @@ pipeline{
 	    
 	}
 
-}
+
