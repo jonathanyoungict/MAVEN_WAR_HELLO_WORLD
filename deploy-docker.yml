@@ -27,6 +27,11 @@
         gpgcheck: yes
         gpgkey: https://download.docker.com/linux/centos/gpg
 
+    - name: Import Docker GPG key
+      rpm_key:
+        key: https://download.docker.com/linux/centos/gpg
+        state: present
+
     - name: Install Docker packages (engine)
       yum:
         name:
