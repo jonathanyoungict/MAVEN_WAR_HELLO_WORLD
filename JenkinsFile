@@ -56,9 +56,11 @@ pipeline{
             steps{
 		script{
 			sh "ansible-playbook deploy-docker.yml"
-		}	
-            }
-        }        
-    }
-    
+			}	
+	            }
+	        }        
+	    }
+	    
+	}
+
 }
