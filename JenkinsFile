@@ -41,7 +41,7 @@ pipeline{
 	stage('DockerHub Push') {
 	    steps {
 	        script {
-			withCredentials([sshUserPrivateKey(credentialsId: 'your-ssh-credentials-id', keyFileVariable: 'SSH_KEY')]) {
+			withCredentials([sshUserPrivateKey(credentialsId: 'ssh-credentials-id', keyFileVariable: 'SSH_KEY')]) {
                 	// Run Ansible ping command using the SSH key
                 	sh "ansible -m ping -u eastih -i '${ansible_host},' --private-key=${SSH_KEY} ${ansible_extra_args}"
 	            	//docker.withRegistry('', 'docker-hub-creds') {
