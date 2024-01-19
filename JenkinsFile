@@ -50,7 +50,9 @@ pipeline{
 
       stage('Docker Deploy'){
             steps{
-				sh "ansible-playbook deploy-docker.yml"
+			script{
+				sh "ansible-playbook -i server.ini deploy-docker.yml"
+			}
             }
         }        
     }
