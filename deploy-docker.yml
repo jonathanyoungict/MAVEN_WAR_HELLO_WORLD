@@ -1,6 +1,6 @@
 ---
 - name: Install Docker on Linuxclient1
-  hosts: linuxclient1
+  hosts: my_server
   become: true
 
   tasks:
