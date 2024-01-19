@@ -8,7 +8,6 @@ pipeline{
 	
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('docker-hub-creds')
-	ANSIBLE_HOST_KEY_CHECKING = 'False'
     }
 
     stages{
@@ -42,6 +41,7 @@ pipeline{
 	stage('DockerHub Push') {
 	    steps {
 	        script {
+			sh "ansible -m ping linuxclient1"
 	            docker.withRegistry('', 'docker-hub-creds') {
 	                sh "docker push jonathanefreilearning/tomcat_example:latest"
 	            }
