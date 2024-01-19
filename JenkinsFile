@@ -52,8 +52,7 @@ pipeline{
       stage('Docker Deploy'){
             steps{
 		script{
-			sh 'ssh-keyscan -H 192.168.0.34 >> ~/.ssh/known_hosts'
-			sh "ansible-playbook -i inventory.ini deploy-docker.yml -l target"
+			sh "ansible-playbook deploy-docker.yml"
 		}	
             }
         }        
