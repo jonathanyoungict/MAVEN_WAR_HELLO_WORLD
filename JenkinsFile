@@ -43,7 +43,7 @@ pipeline{
 	        script {
 			withCredentials([sshUserPrivateKey(credentialsId: 'ssh-credentials-id', keyFileVariable: 'SSH_KEY')]) {
                 	// Run Ansible ping command using the SSH key
-                	sh "ansible -m ping -u eastih -i 192.168.0.36 --private-key=${SSH_KEY}"
+                	sh "ansible -m ping -u eastih -i 192.168.0.36 --private-key=$SSH_KEY"
 	            	//docker.withRegistry('', 'docker-hub-creds') {
 	                //sh "docker push jonathanefreilearning/tomcat_example:latest"
 		            
