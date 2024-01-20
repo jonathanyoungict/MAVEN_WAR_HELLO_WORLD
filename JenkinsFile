@@ -33,7 +33,7 @@ pipeline{
 		        }
 		    }
 		  
-		    stage('Docker Deploy'){
+		    stage('Docker Deploy'){ 
 		        steps{
 		            echo 'Deploy Docker'
 		            ansiblePlaybook credentialsId: 'ansible', inventory: 'dev.inv', playbook: 'deploy-docker.yml'     
